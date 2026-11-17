@@ -1,0 +1,12 @@
+{
+  "name": "neotecnologias",
+  "owner": { "name": "NEObmonge" },
+  "description": "Temas de Neotecnologías para la app de escritorio de Claude.",
+  "plugins": [
+    {
+      "name": "neo-tema",
+      "source": "./plugins/neo-tema",
+      "description": "Tema de Neotecnologías para la app de escritorio de Claude: aurora de puntos braille en los azules de la marca sobre navy, con el isotipo en puntos."
+    }
+  ]
+}
