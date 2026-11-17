@@ -114,21 +114,25 @@ type Punto = { x: number; y: number; r: number; color: number; semilla: number }
 const BRILLOS = [0.4, 0.65, 1] as const
 
 /**
- * Agrupa los puntos por tono (12 de la paleta) y brillo, para que el SVG no crezca de más.
- * `desvio` corre todos los tonos por la paleta (el vaivén); `titila` da a cada punto un brillo propio del cuadro.
+ * Agrupa los puntos por tono (12 de la paleta) y brillo. Cada grupo es un solo trazo: un segmento de largo cero por
+ * punto con punta redonda, que se ve como un círculo. Así la escena tiene unas decenas de elementos en vez de cientos
+ * de círculos, y la app la dibuja más rápido al cambiar de chat.
+ * `desvio` corre todos los tonos por la paleta; `titila` da a cada punto un brillo propio del cuadro.
  */
 function dibujar(puntos: readonly Punto[], colores: readonly string[], cuadro: number, desvio: number, titila: boolean, brilloFijo = 1): string {
   const grupos = new Map<string, string>()
+  let r = 2
   for (const p of puntos) {
+    r = p.r
     const k = Math.round(Math.min(1, Math.max(0, p.color + desvio)) * 11)
     const b = titila ? BRILLOS[Math.floor(hash(p.semilla * 3.1 + cuadro * 7.3) * BRILLOS.length)] ?? 1 : brilloFijo
     const clave = `${k}|${b}`
-    grupos.set(clave, `${grupos.get(clave) ?? ''}<circle cx="${p.x}" cy="${p.y}" r="${p.r}"/>`)
+    grupos.set(clave, `${grupos.get(clave) ?? ''}M${p.x} ${p.y}h0`)
   }
   return [...grupos]
-    .map(([clave, c]) => {
+    .map(([clave, d]) => {
       const [k, b] = clave.split('|').map(Number)
-      return `<g fill="${paleta(colores, (k ?? 0) / 11)}" opacity="${b}">${c}</g>`
+      return `<path d="${d}" fill="none" stroke="${paleta(colores, (k ?? 0) / 11)}" stroke-width="${r * 2}" stroke-linecap="round" opacity="${b}"/>`
     })
     .join('')
 }
