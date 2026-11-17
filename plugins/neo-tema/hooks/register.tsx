@@ -21,6 +21,9 @@ const VELO = '#070E1D'
 const { theme, problems } = makeColors({
   label: 'Neotecnologías',
   only: 'dark',
+  // El panel de archivos y el resaltado del código toman el fondo del tema de código, no de la paleta:
+  // GitHub Dark (#24292E): gris oscuro neutro, sin tono verde ni violeta.
+  codeTheme: { dark: 'github-dark' },
   // pro (literales en el código) no tiene color en la web: violeta para no confundirlo con el azul.
   roles: { accent: '#0750FC', danger: '#E5484D', success: '#00B870', warning: '#F4B400', pro: '#7A4DFF' },
   dark: {
